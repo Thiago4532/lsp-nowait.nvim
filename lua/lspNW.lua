@@ -3,6 +3,8 @@ local api = vim.api
 local uv = vim.loop
 
 local dirpath = debug.getinfo(1, 'S').source:match("@(.*/)")
+-- Windows compatibility
+dirpath = dirpath or debug.getinfo(1, 'S').source:match("@(.*\\)")
 assert(dirpath, "Unable to get source path!")
 
 local function is_loaded()
