@@ -53,7 +53,7 @@ local function patch()
     assert(matches == 1, "patch failed!")
 
     -- patch: pid_list
-    data, matches = data:gsub('(\n%s+if tbl_isempty%(active_clients%) then.-end\n)(.-client.stop%(%).-end\n)',
+    data, matches = data:gsub('(\n%s+if tbl_isempty%(active_clients%) then.-end\n.-client.stop%(%).-end\n)',
     '%1\n' .. [[
   local pid_list = {}
   for client_id, client in pairs(active_clients) do
@@ -61,7 +61,7 @@ local function patch()
       pid_list[#pid_list + 1] = client.rpc.handle:get_pid() 
       active_clients[client_id] = nil
     end
-  end]] .. '\n\n%2' .. [[
+  end]] .. '\n' .. [[
   require'lspNW'._call_exit(pid_list)
 ]])
     assert(matches == 1, "patch failed!")
